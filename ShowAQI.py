@@ -36,7 +36,7 @@ import paho.mqtt.client as mqtt
 #MQTT functions
 def on_connect(client, userdata, flags, rc):  # The callback for when the client connects to the broker
     print("Connected with result code {0}".format(str(rc)))  # Print result of connection attempt
-    client.subscribe("channels/898510/subscribe/fields/field2")  # Subscribe to the topic
+    client.subscribe(topic)  # Subscribe to the topic
 
 
 def on_message(client, userdata, msg):  # The callback for when a PUBLISH message is received from the server.
@@ -44,8 +44,8 @@ def on_message(client, userdata, msg):  # The callback for when a PUBLISH messag
 
 
 channelID = '898510'
-apiKey = '5EG4SZ384VG3RK6I'
-topic = "channels/" + channelID + "/subscribe/fields/field2"
+apiKey = 'A8NJE14YJZK5FYVB'
+topic = "channels/" + channelID + "/subscribe/json/" + apiKey
 mqttHost = "mqtt.thingspeak.com"
 tTransport = "tcp"
 tPort = 1883
