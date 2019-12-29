@@ -138,7 +138,7 @@ while True:
     #draw.text((x, top+25),    str(Disk),  font=font, fill=255)
 
     try:
-        msg = subscribe.simple(topic, hostname=mqttHost, port=tPort, tls=tTLS, transport=tTransport)
+        msg = subscribe.simple("channels/898510/subscribe/fields/field2", hostname=mqttHost, port=tPort, tls=tTLS, transport=tTransport)
         print("%s %s" % (msg.topic, msg.payload))
         print("[INFO] Getting ...")
         draw.text((x, top),"AQI: " + srt(rxData),  font=font, fill=255)
