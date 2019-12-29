@@ -30,10 +30,19 @@ from PIL import ImageFont
 
 import subprocess
 
-import paho.mqtt.subscribe as subscribe
+#import paho.mqtt.subscribe as subscribe
+import paho.mqtt.client as mqtt
+
+#MQTT functions
+def on_connect(client, userdata, flags, rc):  # The callback for when the client connects to the broker
+    print("Connected with result code {0}".format(str(rc)))  # Print result of connection attempt
+    client.subscribe("channels/898510/subscribe/fields/field2")  # Subscribe to the topic
 
 
-#MQTT Setup
+def on_message(client, userdata, msg):  # The callback for when a PUBLISH message is received from the server.
+    print("Message received-> " + msg.topic + " " + str(msg.payload))  # Print a received msg
+
+
 channelID = '898510'
 apiKey = '5EG4SZ384VG3RK6I'
 topic = "channels/" + channelID + "/subscribe/fields/field2"
@@ -49,36 +58,12 @@ DC = 23
 SPI_PORT = 0
 SPI_DEVICE = 0
 
-# Beaglebone Black pin configuration:
-# RST = 'P9_12'
-# Note the following are only used with SPI:
-# DC = 'P9_15'
-# SPI_PORT = 1
-# SPI_DEVICE = 0
+
 
 # 128x32 display with hardware I2C:
 disp = Adafruit_SSD1306.SSD1306_128_32(rst=RST)
 
-# 128x64 display with hardware I2C:
-# disp = Adafruit_SSD1306.SSD1306_128_64(rst=RST)
 
-# Note you can change the I2C address by passing an i2c_address parameter like:
-# disp = Adafruit_SSD1306.SSD1306_128_64(rst=RST, i2c_address=0x3C)
-
-# Alternatively you can specify an explicit I2C bus number, for example
-# with the 128x32 display you would use:
-# disp = Adafruit_SSD1306.SSD1306_128_32(rst=RST, i2c_bus=2)
-
-# 128x32 display with hardware SPI:
-# disp = Adafruit_SSD1306.SSD1306_128_32(rst=RST, dc=DC, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE, max_speed_hz=8000000))
-
-# 128x64 display with hardware SPI:
-# disp = Adafruit_SSD1306.SSD1306_128_64(rst=RST, dc=DC, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE, max_speed_hz=8000000))
-
-# Alternatively you can specify a software SPI implementation by providing
-# digital GPIO pin numbers for all the required display pins.  For example
-# on a Raspberry Pi with the 128x32 display you might use:
-# disp = Adafruit_SSD1306.SSD1306_128_32(rst=RST, dc=DC, sclk=18, din=25, cs=22)
 
 # Initialize library.
 disp.begin()
@@ -111,10 +96,6 @@ x = 0
 # Load default font.
 font = ImageFont.load_default()
 
-# Alternatively load a TTF font.  Make sure the .ttf font file is in the same directory as the python script!
-# Some other nice fonts to try: http://www.dafont.com/bitmap.php
-# font = ImageFont.truetype('Minecraftia.ttf', 8)
-
 while True:
 
     # Draw a black filled box to clear the image.
@@ -137,15 +118,22 @@ while True:
     #draw.text((x, top+16),    str(MemUsage),  font=font, fill=255)
     #draw.text((x, top+25),    str(Disk),  font=font, fill=255)
 
-    try:
-        msg = subscribe.simple("channels/898510/subscribe/fields/field2", hostname=mqttHost, port=tPort, tls=tTLS, transport=tTransport)
-        print("%s %s" % (msg.topic, msg.payload))
-        print("[INFO] Getting ...")
-        draw.text((x, top),"AQI: " + srt(rxData),  font=font, fill=255)
-        time.sleep(60)
-    except:
-        print("[INFO] Failure in getting data")
-        time.sleep(12)
+    # try:
+        # msg = subscribe.simple("channels/898510/subscribe/fields/field2", hostname=mqttHost, port=tPort, tls=tTLS, transport=tTransport)
+        # print("%s %s" % (msg.topic, msg.payload))
+        # print("[INFO] Getting ...")
+        # draw.text((x, top),"AQI: " + srt(rxData),  font=font, fill=255)
+        # time.sleep(60)
+    # except:
+        # print("[INFO] Failure in getting data")
+        # time.sleep(12)
+        
+    client = mqtt.Client('digi_mqtt_test')  # Create instance of client with client ID
+    client.on_connect = on_connect  # Define callback function for successful connection
+    client.on_message = on_message  # Define callback function for receipt of a message
+    client.connect(mqttHost, 1883, 60)  # Connect to (broker, port, keepalive-time)
+    #client.connect('127.0.0.1', 17300)
+    client.loop_forever()  # Start networking daemon    
 
     # Display image.
     disp.image(image)
