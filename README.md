@@ -1,5 +1,5 @@
 #showAQI
-little pi project to dislpay air quality index on a tiny monochrome by pulling data from MQTT subscription
+little pi project to dislpay air quality index on a tiny monochrome by pulling data from RESTful interface hosted on thingspeak
 
 setup:
 * Use python3
