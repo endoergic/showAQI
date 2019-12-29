@@ -3,11 +3,16 @@ little pi project to dislpay air quality index on a tiny monochrome by pulling d
 
 setup:
 * Use python3
+* follow this exactly: https://www.raspberrypi-spy.co.uk/2018/04/i2c-oled-display-module-with-raspberry-pi/
+
+
+//the rest is for monitoring using sensor
 
 install at startup:
 crontab -e
 add the following:
 @reboot cd /home/pi/airmonitor/ && python3 ts_air_quality_logger_ext.py
+
 
 
 howto: https://www.instructables.com/id/A-Low-cost-IoT-Air-Quality-Monitor-Based-on-Raspbe/
