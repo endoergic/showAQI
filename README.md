@@ -13,6 +13,9 @@ crontab -e
 add the following:
 @reboot cd /home/pi/airmonitor/ && python3 ts_air_quality_logger_ext.py
 
+python3 -m pip install Adafruit-SSD1306
+
+
 
 
 howto: https://www.instructables.com/id/A-Low-cost-IoT-Air-Quality-Monitor-Based-on-Raspbe/
