@@ -128,7 +128,12 @@ while True:
 	#
 	
 	pmt_2_5, pmt_10 = get_data()
-	aqi_2_5, aqi_10 = conv_aqi(pmt_2_5, pmt_10)
+	
+	try:
+		aqi_2_5, aqi_10 = conv_aqi(pmt_2_5, pmt_10)
+	except:
+		print("unhandled error occured")
+		
 	field2Data = aqi_2_5
 	field4Data = aqi_10
 	tPayload = "field1=" + str(pmt_2_5)+ "&field2=" + str(aqi_2_5)+ "&field3=" + str(pmt_10)+ "&field4=" + str(aqi_10)
